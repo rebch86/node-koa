@@ -1,9 +1,9 @@
 
 /node-modules
 
-/.idea
 .idea
 .idea/*
-/.idea/*.xml
+.idea/*.xml
+.idea/**/workspace.xml
 
 **/.idea
