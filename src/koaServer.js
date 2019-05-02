@@ -1,4 +1,8 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
 const Koa = require("koa");
+const mysql = require('mysql2/promise');
 const logger = require('./logger/logger');
 const router = require('./router/router');
 const bodyParser = require('koa-bodyparser');
@@ -25,6 +29,13 @@ passport.use(new localStrategy({
         passReqToCallback: true
     },
     function (request, userId, password, done) {
+        const pool = mysql.createPool({
+            host: process.env.DB_HOST,
+            user: process.env.DB_HOST,
+            password: process.env.DB_HOST,
+            database: process.env.DB_NAME,
+        });
+
         //this one is typically a DB call. Assume that the returned user object is pre-formatted and ready for storing in JWT
     }
 ));
@@ -56,4 +67,5 @@ const port = 3030;
 app.listen(port, function () {
     console.log('koa start..');
     console.log(`PORT : ${port}`);
+    console.log('env load ' +  process.env.WELCOME);
 });
