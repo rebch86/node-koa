@@ -3,40 +3,16 @@ dotenv.config();
 
 const Koa = require("koa");
 const logger = require('./logger/logger');
-const router = require('./router/router');
+const router = require('./router/router-index');
+
+
 const bodyParser = require('koa-bodyparser');
+const dbConnection = require('./db/mysql-connection');
 
 const KoaSession = require('koa-session');
 const app = new Koa();
 
 
-const mysql = require('mysql2/promise');
-
-try {
-    /* Step 1, create DB Pool */
-    const pool = mysql.createPool({
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_NAME,
-    });
-    /* Step 2. get connection */
-    const getConnection = async () => {
-        let connection = null;
-        try {
-            connection = await pool.getConnection(async conn => conn);
-        } catch (err) {
-            console.log(err);
-        }
-        console.log(connection);
-    };
-
-    getConnection();
-
-} catch (err) {
-    console.log(err);
-
-}
 
 app.use(bodyParser()) //bodyParser는 라우터 코드보다 상단에 있어야함.
     .use(logger())
@@ -83,13 +59,23 @@ passport.deserializeUser((user, done) => {
 //     ctx.body = ctx.request.body;
 // });
 
-
-
 const port = 3030;
 app.listen(port, function () {
     console.log('koa start..');
     console.log(`PORT : ${port}`);
     console.log('env load ' +  process.env.WELCOME);
+
+    dbConnection().then(connection => {
+       connection.query('SELECT * FROM user', function (err, results, fileds) {
+           if(results.length == 0) {
+               console.log('no data..');
+           } else {
+               console.log(results);
+               connection.close();
+           }
+       });
+    });
+
 });
 
 
