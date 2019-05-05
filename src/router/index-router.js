@@ -1,8 +1,8 @@
 const KoaRouter = require('koa-router');
 const fs = require('fs');
-const index = new KoaRouter();
+const router = new KoaRouter();
 
-index.get('/', async (ctx, next) => {
+router.get('/', async (ctx, next) => {
     console.log(ctx.query); //get queryString value
     ctx.response.type = 'html';
     ctx.response.body = fs.createReadStream('./src/pages/index.html');
@@ -14,4 +14,4 @@ index.get('/', async (ctx, next) => {
     });
 
 
-module.exports = index;
+module.exports = router;

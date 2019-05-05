@@ -12,8 +12,6 @@ const dbConnection = require('./db/mysql-connection');
 const KoaSession = require('koa-session');
 const app = new Koa();
 
-
-
 app.use(bodyParser()) //bodyParser는 라우터 코드보다 상단에 있어야함.
     .use(logger())
     .use(KoaSession(app))
