@@ -6,14 +6,8 @@ router.get('/', async (ctx, next) => {
 });
 
 router.post('login', async (ctx, next) => {
-    console.log('call /login POST');
-    // console.log(ctx.request.body);
-    ctx.body = 'GET ' + ctx.request.path;
-});
-
-router.get(':title', async (ctx, next) => {
-    console.log(ctx.params); //get named route parameter
-    ctx.body = 'GET ' + ctx.request.path;
+    console.log(ctx.request.body);
+    ctx.body = 'POST ' + ctx.request.path;
 });
 
 module.exports = router;

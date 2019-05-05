@@ -3,7 +3,7 @@ dotenv.config();
 
 const Koa = require("koa");
 const logger = require('./logger/logger');
-const router = require('./router/router-index');
+const router = require('./router/index');
 
 
 const bodyParser = require('koa-bodyparser');
@@ -31,6 +31,8 @@ passport.use(new localStrategy({
         passReqToCallback: true
     },
     function (request, userId, password, done) {
+    console.log('passport..');
+    console.log(request);
         //this one is typically a DB call. Assume that the returned user object is pre-formatted and ready for storing in JWT
     }
 ));
