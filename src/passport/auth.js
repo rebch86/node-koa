@@ -8,11 +8,11 @@ const jwtStrategy = require('passport-jwt').Strategy; // jwt 로그인 전략
 passport.use(new localStrategy({
         usernameField: 'userId',
         passwordField: 'password',
-        passReqToCallback: true
+        passReqToCallback: true,
     },
     function (request, userId, password, done) {
         console.log('passport..');
-        console.log(request);
+        // console.log(request);
         //this one is typically a DB call. Assume that the returned user object is pre-formatted and ready for storing in JWT
     }
 ));
@@ -27,7 +27,3 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => {
 
 }); // 전략 실패시 호출
-
-
-
-module.exports = passport;

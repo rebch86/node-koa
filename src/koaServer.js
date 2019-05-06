@@ -2,25 +2,30 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const Koa = require("koa");
-const KoaSession = require('koa-session');
 const logger = require('./logger/logger');
 const router = require('./router/index');
-
-const passport = require('./passport/index');
 
 const bodyParser = require('koa-bodyparser');
 const dbConnection = require('./db/mysql-connection');
 
 const app = new Koa();
 
+// sessions
+const session = require('koa-session');
+app.keys = ['phpbae'];
+app.use(session(app));
+
+// passport
+require('./passport/auth');
+const passport = require('koa-passport');
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(bodyParser()) //bodyParser는 라우터 코드보다 상단에 있어야함.
     .use(logger())
-    .use(KoaSession(app))
     .use(router.routes())
     .use(router.allowedMethods());
 
-app.use(passport.initialize());
-app.use(passport.session());
 
 
 // app.use(async ctx => {
