@@ -4,7 +4,12 @@ const passport = require('koa-passport');
 const fs = require('fs');
 
 router.get('/', async (ctx, next) => {
-    ctx.body = 'GET ' + ctx.request.path;
+    let n = 0;
+    if(ctx.session) {
+        n = ctx.session.views || 0;
+        ctx.session.views = ++n;
+    }
+    ctx.body = `GET ${ctx.request.path} / SESSION views = ${n}`;
 });
 
 // router.post('login', async (ctx, next) => {
@@ -13,8 +18,9 @@ router.get('/', async (ctx, next) => {
 
 router.post('login',
     passport.authenticate('local', {
-        successRedirect: '/',
-        failureRedirect: 'login'
+        successRedirect: 'auth',
+        failureRedirect: 'index',
+        session: true
     })
 );
 
