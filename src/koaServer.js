@@ -1,6 +1,8 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
+const KoaStatic = require('koa-static');
+const KoaMount = require('koa-mount');
 const Koa = require("koa");
 const logger = require('./logger/logger');
 const router = require('./router/index');
@@ -39,7 +41,7 @@ app.use(bodyParser()) //bodyParser는 라우터 코드보다 상단에 있어야
     .use(router.routes())
     .use(router.allowedMethods());
 
-
+app.use(KoaMount('/public', KoaStatic('./public')));
 
 // app.use(async ctx => {
 //     ctx.body = "<h1>First koa example !!</h1>";

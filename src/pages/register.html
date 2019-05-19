@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>통합회원가입</title>
+    <link rel="stylesheet" href="../public/css/register.css">
+</head>
+<body>
+
+<div class="register-wrap">
+    <div class="wrap-title">
+        <h2>
+            통합회원가입
+        </h2>
+    </div>
+    <form method="post" style="flex-basis: 100%">
+        <div class="form-wrap">
+            <div class="input-title">
+                <span>USERID :</span>
+                <input type="text" name="userId">
+            </div>
+            <div class="input-title">
+                <span>PASSWORD :</span>
+                <input type="password" name="password">
+            </div>
+            <div class="input-title">
+                <span>이름 :</span>
+                <input type="text" name="password">
+            </div>
+            <div class="input-title">
+                <span>성별 :</span>
+                <div class="radio-wrap">
+                    <div>
+                        <input type="radio" id="man" name="gender" value="남" checked>
+                        <label for="man">남</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="woman" name="gender" value="여">
+                        <label for="woman">여</label>
+                    </div>
+                </div>
+            </div>
+            <div class="input-title">
+                <span>나이 :</span>
+                <input type="text" name="password">
+            </div>
+            <div class="input-title">
+                <span>주소 :</span>
+                <input type="text" name="password">
+            </div>
+            <div class="input-title">
+                <span>상세주소 :</span>
+                <input type="text" name="password">
+            </div>
+            <div class="input-title">
+                <span>우편번호 :</span>
+                <input type="number" min="0" name="password">
+            </div>
+            <div class="btn-wrap">
+                <button id="member-regist-btn" class="btn-basic">가입하기</button>
+                <a href="/index">
+                    <button type="button" class="btn-basic">이전으로</button>
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>
+
+<script>
+    window.onload = function () {
+        //실행될 코드
+        document.getElementById('member-regist-btn').addEventListener('click', function (e) {
+            e.preventDefault();
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () { // 요청에 대한 콜백
+                if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+                    if (xhr.status === 200 || xhr.status === 201) {
+                        console.log(xhr.responseText);
+                    } else {
+                        console.error(xhr.responseText);
+                    }
+                }
+            };
+            xhr.open('POST', '/index/regist/members'); // 메소드와 주소 설정
+            xhr.send(); // 요청 전송
+        });
+    }
+</script>

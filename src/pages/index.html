@@ -3,24 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Index</title>
+
+    <link rel="stylesheet" href="/public/css/index.css">
+
 </head>
 <body>
-
 <h1> 로그인을 시도해 봅시다. (by PASSPORT)</h1>
 <div>
     <form method="post" action="/login" name="formLogin" id="formLogin">
-        <div style="border: 1px solid skyblue; padding: 5px">
-            <div>
-                USERID :
+        <div class="form-wrap">
+            <div class="input-title">
+                <span>USERID :</span>
                 <input type="text" name="userId">
             </div>
-            <div>
-                PASSWORD :
+            <div class="input-title">
+                <span>PASSWORD :</span>
                 <input type="password" name="password">
             </div>
-            <button type="submit">Login</button>
+            <div class="btn-wrap">
+                <button type="submit" class="btn-basic">로그인</button>
+                <a href="/index/register">
+                    <button type="button" class="btn-basic">회원가입</button>
+                </a>
+            </div>
         </div>
     </form>
+    <div>
+        created by. phpbae
+    </div>
 </div>
 
 </body>
