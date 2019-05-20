@@ -17,15 +17,15 @@
         <div class="form-wrap">
             <div class="input-title">
                 <span>USERID :</span>
-                <input type="text" name="userId">
+                <input type="text" name="userId" id="userId">
             </div>
             <div class="input-title">
                 <span>PASSWORD :</span>
-                <input type="password" name="password">
+                <input type="password" name="password" id="password">
             </div>
             <div class="input-title">
                 <span>이름 :</span>
-                <input type="text" name="password">
+                <input type="text" name="name" id="name">
             </div>
             <div class="input-title">
                 <span>성별 :</span>
@@ -42,19 +42,19 @@
             </div>
             <div class="input-title">
                 <span>나이 :</span>
-                <input type="text" name="password">
+                <input type="text" name="age" id="age">
             </div>
             <div class="input-title">
                 <span>주소 :</span>
-                <input type="text" name="password">
+                <input type="text" name="address" id="address">
             </div>
             <div class="input-title">
                 <span>상세주소 :</span>
-                <input type="text" name="password">
+                <input type="text" name="addressDetail" id="addressDetail">
             </div>
             <div class="input-title">
                 <span>우편번호 :</span>
-                <input type="number" min="0" name="password">
+                <input type="number" min="0" name="zipcode" id="zipcode">
             </div>
             <div class="btn-wrap">
                 <button id="member-regist-btn" class="btn-basic">가입하기</button>
@@ -74,6 +74,18 @@
         document.getElementById('member-regist-btn').addEventListener('click', function (e) {
             e.preventDefault();
             var xhr = new XMLHttpRequest();
+
+            var params = {
+                userId: document.getElementById('userId').value,
+                password: document.getElementById('password').value,
+                name: document.getElementById('userId').value,
+                gender: document.querySelector('input[name=gender]:checked').value,
+                age: document.getElementById('age').value,
+                address: document.getElementById('address').value,
+                addressDetail: document.getElementById('addressDetail').value,
+                zipcode: document.getElementById('zipcode').value,
+            };
+
             xhr.onreadystatechange = function () { // 요청에 대한 콜백
                 if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
                     if (xhr.status === 200 || xhr.status === 201) {
@@ -84,7 +96,8 @@
                 }
             };
             xhr.open('POST', '/index/regist/members'); // 메소드와 주소 설정
-            xhr.send(); // 요청 전송
+            xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
+            xhr.send(JSON.stringify(params)); // 요청 전송
         });
     }
 </script>

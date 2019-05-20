@@ -18,8 +18,9 @@ router.get('/', async (ctx, next) => {
     });
 
 router.post('/regist/members', async(ctx, next) => {
-    console.log('test 데이터 내놔');
     console.log(ctx.request.body);
+    ctx.response.type = 'text/plain';
+    ctx.response.status = 200;
 });
 
 module.exports = router;
