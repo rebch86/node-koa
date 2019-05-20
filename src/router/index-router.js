@@ -17,7 +17,7 @@ router.get('/', async (ctx, next) => {
         ctx.response.body = fs.createReadStream('./src/pages/index.html');
     });
 
-router.post('/regist/members', async(ctx, next) => {
+router.post('/regist/members', async (ctx, next) => {
     console.log(ctx.request.body);
     ctx.response.type = 'text/plain';
     ctx.response.status = 200;
