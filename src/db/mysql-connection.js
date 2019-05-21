@@ -13,12 +13,14 @@ const getConnection = async () => {
     let connection = null;
     try {
         connection = await pool.getConnection(async conn => conn);
-        return connection;
     } catch (err) {
         console.log('get connection fail');
         console.log(err);
         return false;
     }
+
+    return connection;
+
 };
 
 module.exports = getConnection;

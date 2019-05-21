@@ -48,7 +48,7 @@ app.use(KoaMount('/public', KoaStatic('./public')));
 // });
 
 const port = 3030;
-app.listen(port, function () {
+app.listen(port, async function () {
     console.log('koa start..');
     console.log(`PORT : ${port}`);
     console.log('env load ' +  process.env.WELCOME);

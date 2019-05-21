@@ -89,9 +89,19 @@
             xhr.onreadystatechange = function () { // 요청에 대한 콜백
                 if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
                     if (xhr.status === 200 || xhr.status === 201) {
-                        console.log(xhr.responseText);
+                        // console.log(xhr.responseText);
+                        console.log(JSON.parse(xhr.responseText));
+                        const response = JSON.parse(xhr.responseText);
+                        if(response.hasOwnProperty('error')){
+                            alert(response.error);
+                            return false;
+                        } else {
+                            alert(response.message);
+                            location.replace('/index');
+                        }
+
                     } else {
-                        console.error(xhr.responseText);
+                        console.error(JSON.parse(xhr.responseText));
                     }
                 }
             };
