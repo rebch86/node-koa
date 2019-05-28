@@ -19,6 +19,7 @@ passport.use(new localStrategy({
     },
     function (request, userId, password, done) {
         //this one is typically a DB call. Assume that the returned user object is pre-formatted and ready for storing in JWT
+        console.log('local passport..');
 
         // dbConnection().then(connection => {
         //     connection.query(`SELECT * FROM user WHERE userId = '${userId}' AND password = ${password}`,
@@ -53,7 +54,7 @@ passport.use(new localStrategy({
                             return done(null, null,  { message: '존재하지 않는 사용자 또는 비밀번호가 틀렸습니다.' }); // 임의 에러 처리
                         } else {
                             connection.close();
-
+                            return done(null, results[0]); // 검증 성공
                         }
                     }
                 });
@@ -89,6 +90,8 @@ passport.use(new jwtStrategy({
         secretOrKey   : process.env.JWT_SECRET,
     },
     function (jwtPayload, cb) {
+    console.log('jwt passport..');
+    console.log(jwtPayload);
         //find the user in db if needed
     }
 ));

@@ -28,6 +28,7 @@ router.post('login',
     passport.authenticate('local', {
         successRedirect: 'auth',
         failureRedirect: 'index',
+        session : false,
     })
 );
 

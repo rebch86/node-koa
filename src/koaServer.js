@@ -39,13 +39,7 @@ app.use(passport.session()); // passport 세션 연결
 app.use(bodyParser()) //bodyParser는 라우터 코드보다 상단에 있어야함.
     .use(logger())
     .use(router.routes())
-    .use(router.allowedMethods())
-    .use((req, res, next) => {
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-        res.header('Access-Control-Allow-Headers', 'content-type, jwt-token');
-        next();
-    });
+    .use(router.allowedMethods());
 
 app.use(KoaMount('/public', KoaStatic('./public')));
 
