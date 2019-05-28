@@ -19,7 +19,7 @@ const SESSION_CONFIG = {
     /** (number || 'session') maxAge in ms (default is 1 days) */
     /** 'session' will result in a cookie that expires when session/browser is closed */
     /** Warning: If a session cookie is stolen, this cookie will never expire */
-    maxAge: 10000,
+    maxAge: 60000,
     autoCommit: true, /** (boolean) automatically commit headers (default true) */
     overwrite: true, /** (boolean) can overwrite or not (default true) */
     httpOnly: true, /** (boolean) httpOnly or not (default true) */
@@ -34,12 +34,18 @@ app.use(session(SESSION_CONFIG, app)); // Include the session middleware
 require('./passport/auth');
 const passport = require('koa-passport');
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session()); // passport 세션 연결
 
 app.use(bodyParser()) //bodyParser는 라우터 코드보다 상단에 있어야함.
     .use(logger())
     .use(router.routes())
-    .use(router.allowedMethods());
+    .use(router.allowedMethods())
+    .use((req, res, next) => {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+        res.header('Access-Control-Allow-Headers', 'content-type, jwt-token');
+        next();
+    });
 
 app.use(KoaMount('/public', KoaStatic('./public')));
 

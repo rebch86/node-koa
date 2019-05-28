@@ -16,22 +16,31 @@ router.get('/', async (ctx, next) => {
 //     console.log(ctx.request.body);
 // });
 
+// router.post('login',
+//     passport.authenticate('local', {
+//         successRedirect: 'auth',
+//         failureRedirect: 'index',
+//         session: true
+//     })
+// );
+
 router.post('login',
     passport.authenticate('local', {
         successRedirect: 'auth',
         failureRedirect: 'index',
-        session: true
     })
 );
 
-router.get('auth', async (ctx) => {
-   if(ctx.isAuthenticated()){
-       ctx.response.type = 'html';
-       ctx.response.body = fs.createReadStream('./src/pages/auth_test.html');
-   } else {
-       console.log('not Auth..');
-       ctx.redirect('index');
-   }
-});
+// router.get('auth', async (ctx) => {
+//    if(ctx.isAuthenticated()){
+//        ctx.response.type = 'html';
+//        ctx.response.body = fs.createReadStream('./src/pages/auth_test.html');
+//    } else {
+//        console.log('not Auth..');
+//        ctx.redirect('index');
+//    }
+// });
+
+router.get('auth', passport.authenticate('jwt', {session: false}));
 
 module.exports = router;
