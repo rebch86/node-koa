@@ -53,16 +53,16 @@ app.listen(port, async function () {
     console.log(`PORT : ${port}`);
     console.log('env load ' +  process.env.WELCOME);
 
-    dbConnection().then(connection => {
-       connection.query('SELECT * FROM user', function (err, results, fileds) {
-           if(results.length == 0) {
-               console.log('no data..');
-           } else {
-               console.log(results);
-               connection.close();
-           }
-       });
-    });
+    // dbConnection().then(connection => {
+    //    connection.query('SELECT * FROM user', function (err, results, fileds) {
+    //        if(results.length == 0) {
+    //            console.log('no data..');
+    //        } else {
+    //            console.log(results);
+    //            connection.close();
+    //        }
+    //    });
+    // });
 
 });
 

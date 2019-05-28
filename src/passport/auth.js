@@ -17,7 +17,7 @@ passport.use(new localStrategy({
         passwordField: 'password',
         passReqToCallback: true,
     },
-    function (request, userId, password, done) {
+    async function (request, userId, password, done) {
         //this one is typically a DB call. Assume that the returned user object is pre-formatted and ready for storing in JWT
         console.log('local passport..');
 
@@ -41,25 +41,22 @@ passport.use(new localStrategy({
         //         });
         // });
 
-        dbConnection().then(connection => {
-            connection.query(`SELECT * FROM user WHERE userId = '${userId}' AND password = ${password}`,
-                function (err, results, fileds) {
-                    if (err) {
-                        console.log(err);
-                        connection.close();
-                        return (false, null); // 무조건 실패하는 경우
-                    } else {
-                        if (results.length == 0) {
-                            connection.close();
-                            return done(null, null,  { message: '존재하지 않는 사용자 또는 비밀번호가 틀렸습니다.' }); // 임의 에러 처리
-                        } else {
-                            connection.close();
-                            return done(null, results[0]); // 검증 성공
-                        }
-                    }
-                });
-        });
+        const connection = await dbConnection();
+        try {
+            const [results] = await connection.query(`SELECT * FROM user WHERE userId = '${userId}' AND password = ${password}`);
 
+            if (results.length == 0) {
+                connection.close();
+                return done(null, null, {message: '존재하지 않는 사용자 또는 비밀번호가 틀렸습니다.'}); // 임의 에러 처리
+            } else {
+                connection.close();
+                return done(null, results[0]); // 검증 성공
+            }
+        } catch (err) {
+            console.log(err);
+            connection.close();
+            return done(false, null); // 무조건 실패하는 경우
+        }
 
     }
 ));
@@ -76,22 +73,22 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => {
     // deserializeUser은 실제 서버로 들어오는 요청마다 세션 정보(serializeUser에서 저장됨)를 실제 DB의 데이터와 비교
     console.log('deserializeUser');
-    if(user) {
+    if (user) {
         done(null, user);
     } else {
         console.log('세션 만료!');
-        done(null, null,  { message: '로그인이 끊겼습니다. 다시 시도해 주세요.'});
+        done(null, null, {message: '로그인이 끊겼습니다. 다시 시도해 주세요.'});
     }
 
 });
 
 passport.use(new jwtStrategy({
         jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-        secretOrKey   : process.env.JWT_SECRET,
+        secretOrKey: process.env.JWT_SECRET,
     },
     function (jwtPayload, cb) {
-    console.log('jwt passport..');
-    console.log(jwtPayload);
+        console.log('jwt passport..');
+        console.log(jwtPayload);
         //find the user in db if needed
     }
 ));

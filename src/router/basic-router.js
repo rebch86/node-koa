@@ -5,7 +5,7 @@ const fs = require('fs');
 
 router.get('/', async (ctx, next) => {
     let n = 0;
-    if(ctx.session) {
+    if (ctx.session) {
         n = ctx.session.views || 0;
         ctx.session.views = ++n;
     }
@@ -28,9 +28,24 @@ router.post('login',
     passport.authenticate('local', {
         successRedirect: 'auth',
         failureRedirect: 'index',
-        session : false,
+        session: false
     })
 );
+
+// router.post('login', async (ctx, next) => {
+//     passport.authenticate('local', {session : false}, async (err, user, info) => {
+//         console.log(err);
+//         console.log(user);
+//         console.log(info);
+//
+//         if(user) {
+//             ctx.redirect('auth');
+//         } else {
+//             ctx.redirect('index');
+//         }
+//
+//     })(ctx, next);
+// });
 
 // router.get('auth', async (ctx) => {
 //    if(ctx.isAuthenticated()){
@@ -42,6 +57,8 @@ router.post('login',
 //    }
 // });
 
-router.get('auth', passport.authenticate('jwt', {session: false}));
+router.get('auth', async (ctx, next) => {
+    console.log('JWT 인증함 해보자..');
+});
 
 module.exports = router;
