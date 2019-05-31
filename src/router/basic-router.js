@@ -37,7 +37,9 @@ router.post('login', async (ctx, next) => {
         console.log(user);
 
         if((err || info) && !user) {
-           ctx.redirect('index');
+            ctx.response.type = 'application/json';
+            ctx.response.status=200;
+            ctx.response.body=JSON.stringify({err, info});
         }
 
         if(user && !err && !info) {
@@ -61,6 +63,11 @@ router.post('login', async (ctx, next) => {
 //    }
 // });
 
-router.get('auth', passport.authenticate('jwt', {session: false}));
+router.get('auth', async (ctx) => {
+    await passport.authenticate('jwt', {session: false}, function (err, user, info) {
+       ctx.response.type = 'html';
+       ctx.response.body = fs.createReadStream('./src/pages/auth_test.html');
+    })(ctx);
+});
 
 module.exports = router;

@@ -42,7 +42,7 @@ passport.use(new localStrategy({
         // });
 
         dbConnection().then(connection => {
-            connection.query(`SELECT * FROM user WHERE userId = '${userId}' AND password = ${password}`,
+            connection.query(`SELECT * FROM user WHERE userId = '${userId}' AND password = '${password}'`,
                 function (err, results, fileds) {
                     if (err) {
                         console.log(err);
@@ -55,13 +55,13 @@ passport.use(new localStrategy({
                         } else {
                             connection.close();
                             /** generate a signed json web token and return it in the response */
-                            const token = jwt.sign(JSON.stringify(results[0]), process.env.JWT_SECRET);
                             const user = {...results[0]};
                             delete user['password'];
+                            const token = jwt.sign(JSON.stringify(user), process.env.JWT_SECRET);
                             user.token = token;
                             // console.log(user);
 
-                            return done(null, {user}, null); // 검증 성공
+                            return done(null, user, null); // 검증 성공
                         }
                     }
                 });
@@ -97,14 +97,19 @@ var opts = {};
 
 // 클라이언트에서 서버로 토큰을 전달하는 방식  (header, querystring, body 등이 있다.)
 // header 의 경우 다음과 같이 써야 한다 { key: 'Authorization', value: 'JWT' + 토큰
-opts.jwtFromRequest = ExtractJWT.fromUrlQueryParameter("jwt");
-opts.secretOrKey = process.env.JWT_SECRET;
+// opts.jwtFromRequest = ExtractJWT.fromUrlQueryParameter("jwt");
+// opts.secretOrKey = process.env.JWT_SECRET;
 
-passport.use(new jwtStrategy(opts,
-    function (jwtPayload, cb) {
+passport.use(new jwtStrategy({
+        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+        secretOrKey   : process.env.JWT_SECRET
+    },
+    function (jwtPayload, done) {
+        //find the user in db if needed
     console.log('jwt passport..');
     console.log(jwtPayload);
-        //find the user in db if needed
+    return done(null, null);
+
     }
 ));
 

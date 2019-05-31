@@ -52,12 +52,18 @@
             xhr.onreadystatechange = function () { // 요청에 대한 콜백
                 if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
                     if (xhr.status === 200 || xhr.status === 201) {
-                        // console.log(xhr.responseText);
-                        // console.log(JSON.parse(xhr.responseText));
+                        console.log(xhr.responseText);
                         const response = JSON.parse(xhr.responseText);
 
+                        if(response.err || response.info){
+                            alert(response.err ? response.err : response.info.message);
+                            return false;
+                        }
+
                         localStorage.setItem('jwt', response.token);
-                        location.href='/auth' + '?jwt=' + localStorage.getItem('jwt');
+                        xhr.open('GET', '/auth'); // 메소드와 주소 설정
+                        xhr.setRequestHeader("Authorization", "bearer " + localStorage.jwt);
+                        xhr.send(); // 요청 전송
                     }
                 }
             };
