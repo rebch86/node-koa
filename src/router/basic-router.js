@@ -5,7 +5,7 @@ const fs = require('fs');
 
 router.get('/', async (ctx, next) => {
     let n = 0;
-    if(ctx.session) {
+    if (ctx.session) {
         n = ctx.session.views || 0;
         ctx.session.views = ++n;
     }
@@ -24,13 +24,32 @@ router.get('/', async (ctx, next) => {
 //     })
 // );
 
-router.post('login',
-    passport.authenticate('local', {
-        successRedirect: 'auth',
-        failureRedirect: 'index',
-        session : false,
-    })
-);
+// router.post('login',
+//     passport.authenticate('local', {
+//         successRedirect: 'auth',
+//         failureRedirect: 'index',
+//         session : false,
+//     })
+// );
+
+router.post('login', async (ctx, next) => {
+    await passport.authenticate('local', {session : false}, function(err, user, info, status) {
+        console.log(user);
+
+        if((err || info) && !user) {
+           ctx.redirect('index');
+        }
+
+        if(user && !err && !info) {
+            ctx.response.type = 'application/json';
+            ctx.response.status=200;
+            ctx.response.body=JSON.stringify(user);
+            // ctx.redirect('auth');
+        }
+
+    })(ctx, next);
+
+});
 
 // router.get('auth', async (ctx) => {
 //    if(ctx.isAuthenticated()){

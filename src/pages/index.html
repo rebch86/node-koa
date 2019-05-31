@@ -14,14 +14,14 @@
         <div class="form-wrap">
             <div class="input-title">
                 <span>USERID :</span>
-                <input type="text" name="userId">
+                <input type="text" name="userId" id="userId">
             </div>
             <div class="input-title">
                 <span>PASSWORD :</span>
-                <input type="password" name="password">
+                <input type="password" name="password" id="password">
             </div>
             <div class="btn-wrap">
-                <button type="submit" class="btn-basic">로그인</button>
+                <button type="submit" class="btn-basic" id="login-btn">로그인</button>
                 <a href="/index/register">
                     <button type="button" class="btn-basic">회원가입</button>
                 </a>
@@ -35,3 +35,37 @@
 
 </body>
 </html>
+
+<script>
+    window.onload = function () {
+
+        document.getElementById('login-btn').addEventListener('click', function (event) {
+            event.preventDefault();
+
+            var xhr = new XMLHttpRequest();
+
+            var params = {
+                userId: document.getElementById('userId').value,
+                password: document.getElementById('password').value,
+            };
+
+            xhr.onreadystatechange = function () { // 요청에 대한 콜백
+                if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+                    if (xhr.status === 200 || xhr.status === 201) {
+                        // console.log(xhr.responseText);
+                        // console.log(JSON.parse(xhr.responseText));
+                        const response = JSON.parse(xhr.responseText);
+
+                        localStorage.setItem('jwt', response.token);
+                        location.href='/auth' + '?jwt=' + localStorage.getItem('jwt');
+                    }
+                }
+            };
+            xhr.open('POST', '/login'); // 메소드와 주소 설정
+            xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
+            xhr.send(JSON.stringify(params)); // 요청 전송
+
+        })
+
+    };
+</script>

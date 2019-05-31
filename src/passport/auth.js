@@ -47,14 +47,21 @@ passport.use(new localStrategy({
                     if (err) {
                         console.log(err);
                         connection.close();
-                        return (false, null); // 무조건 실패하는 경우
+                        return (err, null, null); // 무조건 실패하는 경우
                     } else {
                         if (results.length == 0) {
                             connection.close();
                             return done(null, null,  { message: '존재하지 않는 사용자 또는 비밀번호가 틀렸습니다.' }); // 임의 에러 처리
                         } else {
                             connection.close();
-                            return done(null, results[0]); // 검증 성공
+                            /** generate a signed json web token and return it in the response */
+                            const token = jwt.sign(JSON.stringify(results[0]), process.env.JWT_SECRET);
+                            const user = {...results[0]};
+                            delete user['password'];
+                            user.token = token;
+                            // console.log(user);
+
+                            return done(null, {user}, null); // 검증 성공
                         }
                     }
                 });
@@ -85,10 +92,15 @@ passport.deserializeUser((user, done) => {
 
 });
 
-passport.use(new jwtStrategy({
-        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-        secretOrKey   : process.env.JWT_SECRET,
-    },
+
+var opts = {};
+
+// 클라이언트에서 서버로 토큰을 전달하는 방식  (header, querystring, body 등이 있다.)
+// header 의 경우 다음과 같이 써야 한다 { key: 'Authorization', value: 'JWT' + 토큰
+opts.jwtFromRequest = ExtractJWT.fromUrlQueryParameter("jwt");
+opts.secretOrKey = process.env.JWT_SECRET;
+
+passport.use(new jwtStrategy(opts,
     function (jwtPayload, cb) {
     console.log('jwt passport..');
     console.log(jwtPayload);
