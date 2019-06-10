@@ -61,9 +61,9 @@
                         }
 
                         localStorage.setItem('jwt', response.token);
-                        xhr.open('GET', '/auth'); // 메소드와 주소 설정
-                        xhr.setRequestHeader("Authorization", "bearer " + localStorage.jwt);
-                        xhr.send(); // 요청 전송
+
+                        location.href=`auth?jwt=${localStorage.getItem('jwt')}`;
+
                     }
                 }
             };
@@ -71,7 +71,10 @@
             xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
             xhr.send(JSON.stringify(params)); // 요청 전송
 
-        })
+
+
+
+        });
 
     };
 </script>

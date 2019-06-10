@@ -46,11 +46,9 @@ router.post('login', async (ctx, next) => {
             ctx.response.type = 'application/json';
             ctx.response.status=200;
             ctx.response.body=JSON.stringify(user);
-            // ctx.redirect('auth');
         }
 
     })(ctx, next);
-
 });
 
 // router.get('auth', async (ctx) => {
@@ -68,6 +66,9 @@ router.get('auth', async (ctx) => {
        ctx.response.type = 'html';
        ctx.response.body = fs.createReadStream('./src/pages/auth_test.html');
     })(ctx);
+
+    console.log('not Auth..');
+    ctx.redirect('index');
 });
 
 module.exports = router;

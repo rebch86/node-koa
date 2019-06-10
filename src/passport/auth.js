@@ -101,7 +101,8 @@ var opts = {};
 // opts.secretOrKey = process.env.JWT_SECRET;
 
 passport.use(new jwtStrategy({
-        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+        // jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+        jwtFromRequest: ExtractJWT.fromUrlQueryParameter('jwt'),
         secretOrKey   : process.env.JWT_SECRET
     },
     function (jwtPayload, done) {
